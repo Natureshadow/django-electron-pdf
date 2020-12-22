@@ -49,13 +49,13 @@ def electron_pdf(input, output_file=None, **kwargs):
     if settings.ELECTRON_WITHOUT_GRAPHICAL_ENV:
         if getattr(settings, 'XVFB_RUN_LOCATION', None):
             subprocess.call(
-                '{} --server-args "-screen 0 1024x768x24" electron-pdf {} {}'.format(
+                '{} --server-args "-screen 0 1024x768x24" electron-pdf {} {} --browserConfig '{ "webPreferences": { "sandbox" : true } }''.format(
                     settings.XVFB_RUN_LOCATION, input.filename, output_file),
                 **subprocess_kwargs)
         else:
-            subprocess.call('xvfb-run --server-args "-screen 0 1024x768x24" electron-pdf {} {}'.format(input.filename, output_file), **subprocess_kwargs)
+            subprocess.call('xvfb-run --server-args "-screen 0 1024x768x24" electron-pdf {} {} --browserConfig '{ "webPreferences": { "sandbox" : true } }''.format(input.filename, output_file), **subprocess_kwargs)
     else:
-        subprocess.call('electron-pdf {} {}'.format(input.filename, output_file), **subprocess_kwargs)
+        subprocess.call('electron-pdf {} {} --browserConfig '{ "webPreferences": { "sandbox" : true } }''.format(input.filename, output_file), **subprocess_kwargs)
 
     with open(output_file, 'rb') as f:
         return File(f).read()
