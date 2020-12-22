@@ -3,8 +3,6 @@
 import re
 import subprocess
 import uuid
-import six
-from builtins import str
 from tempfile import NamedTemporaryFile
 
 try:
@@ -18,7 +16,6 @@ import django
 from django.conf import settings
 from django.core.files import File
 from django.template import Context, RequestContext
-from django.utils import six
 from django.utils.encoding import smart_text
 
 
@@ -48,9 +45,6 @@ def electron_pdf(input, output_file=None, **kwargs):
         'shell': True,
         'timeout': timeout,
     }
-
-    if six.PY2:
-        del subprocess_kwargs['timeout']
 
     if settings.ELECTRON_WITHOUT_GRAPHICAL_ENV:
         if getattr(settings, 'XVFB_RUN_LOCATION', None):
@@ -119,7 +113,7 @@ def http_quote(string):
     valid ascii charset string you can use in, say, http headers and the
     like.
     """
-    if isinstance(string, six.text_type):
+    if isinstance(string, str):
         try:
             import unidecode
         except ImportError:
@@ -199,7 +193,6 @@ def render_to_temporary_file(template, context, request=None, mode='w+b',
     except TypeError:
         tempfile = NamedTemporaryFile(
             mode=mode,
-            bufsize=bufsize,
             suffix=suffix,
             prefix=prefix,
             dir=dir,
